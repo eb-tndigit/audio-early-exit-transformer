@@ -1,8 +1,13 @@
 ## Serving a model
-In order to start the inference service, you shlould upload to the platform the required files.
-The files could be found on Hugginface
+In order to start the inference service, you should upload to the platform the required files.
+The files could be found on Huggingface
 - for English: https://huggingface.co/SpeechTek/English-EE-conformer/tree/main
 - for Italian: https://huggingface.co/SpeechTek/Italian-EE-conformer/tree/main
+
+0. Git clone from English repo
+```Bash
+git clone https://huggingface.co/SpeechTek/English-EE-conformer/tree/main
+```
 
 
 1. Initializing the project
@@ -18,32 +23,32 @@ project = dh.get_or_create_project("demo-early-exit-eng")
  project.log_model(
     name="early-exit-model",
     kind="model",
-    source="/home/user/upload/English-EE-conformer",
+    source="./English-EE-conformer/english-EE-conformer",
     algorithm="early-exit",
-    framework="pythorch"
+    framework="pytorch"
 )
 
 project.log_artifact(
     name="bpe-256.model",
     kind="artifact",
-    source="/home/user/upload/bpe-256.model"
+    source="./English-EE-conformer/bpe-256.model"
 )
 
 project.log_artifact(
     name="bpe-256.lex",
     kind="artifact",
-    source="/home/user/upload/bpe-256.lex"
+    source="./English-EE-conformer/bpe-256.lex"
 )
 
 project.log_artifact(
     name="bpe-256.tok",
     kind="artifact",
-    source="/home/user/upload/bpe-256.tok"
+    source="./English-EE-conformer/bpe-256.tok"
 )
 ```
 
 
-3. Define a funtion that handle the serving process
+3. Define a function that handle the serving process
 ```Python
 func = project.new_function(name="serve_function",
                             kind="python",
