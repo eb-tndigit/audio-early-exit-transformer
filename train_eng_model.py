@@ -25,7 +25,7 @@ if typing.TYPE_CHECKING:
     from digitalhub.entities.project._base.entity import Project
 
 
-def downoad_and_extract(tgzurl, path, filename):
+def download_and_extract(tgzurl, path, filename):
     filepath = path + filename
     print('File download:' + tgzurl)
     urlretrieve(tgzurl, filepath)
@@ -192,8 +192,9 @@ def run(args, model, total_epoch, best_loss, data_loader, optimizer, loss_fn, ct
 
     return best_model
 
-
-def dh_train(project, librispeech_train_dataset: str, num_epochs: int, model_name: str, base_dir: str):
+# changed and put the actual passed parameters as default in the train function 
+# because passing the arguments is not working properly
+def dh_train(project, librispeech_train_dataset: str = "train-clean-100", num_epochs: int = 10, model_name: str = "early-exit-eng-model", base_dir: str = "/shared/"):
     download_dir = '/data/download/'
 
     try:
@@ -203,12 +204,14 @@ def dh_train(project, librispeech_train_dataset: str, num_epochs: int, model_nam
 
     # Download and unzip training and test dataset
     train_url = "https://www.openslr.org/resources/12/" + librispeech_train_dataset + ".tar.gz"
-    downoad_and_extract(train_url, download_dir, "train.tar.gz")
+    download_and_extract(train_url, download_dir, "train.tar.gz")
     test_url = "https://www.openslr.org/resources/12/test-clean.tar.gz"
-    downoad_and_extract(test_url, download_dir, "test.tar.gz")
+    download_and_extract(test_url, download_dir, "test.tar.gz")
 
+    print("Getting ARGs...")
     # initialize settings
     args = get_args([], base_dir)
+    print(args)
     args.batch_size = 15
     args.n_workers = 3
     args.shuffle = False
@@ -217,7 +220,9 @@ def dh_train(project, librispeech_train_dataset: str, num_epochs: int, model_nam
     args.n_epochs = num_epochs
 
     #create init model
+    print("Loading model...")
     model = load_model(args)
+    print("Loading model OK")
 
     data_loader = get_data_loader(args=args, dataset_path=download_dir)
 
@@ -238,6 +243,7 @@ def dh_train(project, librispeech_train_dataset: str, num_epochs: int, model_nam
     if model_name is None:
         model_name = "early-exit-eng-model"
 
+    print("Saving model to datalake...")
     project.log_model(
         name=model_name,
         kind="model",
@@ -245,5 +251,6 @@ def dh_train(project, librispeech_train_dataset: str, num_epochs: int, model_nam
         algorithm="early-exit",
         framework="pythorch"
     )
+    print(f"Model {model_name} saved!")
 
 
