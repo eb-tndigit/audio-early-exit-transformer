@@ -89,6 +89,41 @@ def init(context, model_name="early-exit-model", sp_model="bpe-256.model", sp_le
     model = load_model(path, args)
     context_dict['model'] = model
 
+    # View the content of the files in the data path
+    print(f"\n--- Contents of {data_path} ---")
+    from pathlib import Path
+    # Define the root path to inspect
+    root_path = Path(data_path)
+    
+    # Check if the path exists and is a directory
+    if root_path.is_dir():
+        # Use rglob('*') to recursively find all files in all subdirectories
+        # and sort them for a clean, predictable output.
+        all_files = sorted(list(root_path.rglob('*')))
+        
+        for file_path in all_files:
+            # We only want to process files, not directories
+            if file_path.is_file():
+                try:
+                    # Get file size in bytes
+                    size_in_bytes = file_path.stat().st_size
+                    
+                    # Convert bytes to megabytes (MB)
+                    size_in_mb = size_in_bytes / (1024 * 1024)
+                    
+                    # Get the path relative to the data_path for cleaner output
+                    relative_path = file_path.relative_to(root_path)
+                    
+                    # Print the formatted output, showing size with 3 decimal places
+                    print(f"{relative_path:<60} {size_in_mb:>8.3f} MB")
+                
+                except FileNotFoundError:
+                    # This can happen in rare cases with broken symbolic links
+                    print(f"{file_path.relative_to(root_path):<60} File not found or broken link.")
+    else:
+        print(f"Error: The specified data_path '{data_path}' does not exist or is not a directory.")
+    
+    print("--- End of content view ---\n")
     # load lexicon
     #lexicon_artifact = project.get_artifact(lexicon)    
     #lexicon_path = lexicon_artifact.download(destination=data_path + "/sentencepiece", overwrite=True)

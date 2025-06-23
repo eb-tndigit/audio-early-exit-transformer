@@ -15,9 +15,12 @@ train_ctc.py
 # Trained models
 trained_model/
 
-# Misc.
+# Misc.<S<S
 paper/
 runs/
 
 # Visual Studio Code
 .vscode
+
+English-EE-conformer/*
+_*
