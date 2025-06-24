@@ -46,7 +46,8 @@ def run(args, model, data_loader, inf):
     return result
 
 
-def init(context, model_name="early-exit-model", sp_model="bpe-256.model", sp_lexicon="bpe-256.lex", sp_tokens="bpe-256.tok"):
+#def init(context, model_name="early-exit-model", sp_model="bpe-256.model", sp_lexicon="bpe-256.lex", sp_tokens="bpe-256.tok"):
+def init(context, model_name="english-EE-conformer", sp_model="bpe-256.model", sp_lexicon="bpe-256.lex", sp_tokens="bpe-256.tok"):
     try:
         os.mkdir(data_path + "/upload")
         context.logger.info("create dir data/upload")
@@ -88,6 +89,7 @@ def init(context, model_name="early-exit-model", sp_model="bpe-256.model", sp_le
     context.logger.info(f"Scanning contents of directory: {data_path}")
 
     try:
+        from pathlib import Path
         # Define the root path to inspect
         root_path = Path(data_path)
         
