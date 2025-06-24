@@ -113,7 +113,7 @@ def init(context, model_name="english-EE-conformer", sp_model="bpe-256.model", s
                         size_in_mb = size_in_bytes / (1024 * 1024)
                         
                         # Get the path relative to the data_path for cleaner output
-                        relative_path = file_path.relative_to(root_path)
+                        relative_path = str(file_path.relative_to(root_path))
                         
                         # Log the formatted output
                         log_message = f"{relative_path:<60} {size_in_mb:>8.3f} MB"
