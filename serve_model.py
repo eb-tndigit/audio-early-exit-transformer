@@ -85,40 +85,57 @@ def init(context, model_name="early-exit-model", sp_model="bpe-256.model", sp_le
     context_dict['args'] = args
 
     # View the content of the files in the data path
-    print(f"\n--- Contents of {data_path} ---")
-    from pathlib import Path
-    # Define the root path to inspect
-    root_path = Path(data_path)
-    
-    # Check if the path exists and is a directory
-    if root_path.is_dir():
-        # Use rglob('*') to recursively find all files in all subdirectories
-        # and sort them for a clean, predictable output.
-        all_files = sorted(list(root_path.rglob('*')))
+    context.logger.info(f"Scanning contents of directory: {data_path}")
+
+    try:
+        # Define the root path to inspect
+        root_path = Path(data_path)
         
-        for file_path in all_files:
-            # We only want to process files, not directories
-            if file_path.is_file():
-                try:
-                    # Get file size in bytes
-                    size_in_bytes = file_path.stat().st_size
+        # Check if the path exists and is a directory
+        if root_path.is_dir():
+            context.logger.info(f"--- Contents of {data_path} ---")
+            
+            # Use rglob('*') to recursively find all files in all subdirectories
+            all_files = sorted(list(root_path.rglob('*')))
+            
+            if not all_files:
+                context.logger.info("Directory is empty.")
+            
+            for file_path in all_files:
+                if file_path.is_file():
+                    try:
+                        # Get file size in bytes
+                        size_in_bytes = file_path.stat().st_size
+                        
+                        # Convert bytes to megabytes (MB)
+                        size_in_mb = size_in_bytes / (1024 * 1024)
+                        
+                        # Get the path relative to the data_path for cleaner output
+                        relative_path = file_path.relative_to(root_path)
+                        
+                        # Log the formatted output
+                        log_message = f"{relative_path:<60} {size_in_mb:>8.3f} MB"
+                        context.logger.info(log_message)
                     
-                    # Convert bytes to megabytes (MB)
-                    size_in_mb = size_in_bytes / (1024 * 1024)
-                    
-                    # Get the path relative to the data_path for cleaner output
-                    relative_path = file_path.relative_to(root_path)
-                    
-                    # Print the formatted output, showing size with 3 decimal places
-                    print(f"{relative_path:<60} {size_in_mb:>8.3f} MB")
-                
-                except FileNotFoundError:
-                    # This can happen in rare cases with broken symbolic links
-                    print(f"{file_path.relative_to(root_path):<60} File not found or broken link.")
-    else:
-        print(f"Error: The specified data_path '{data_path}' does not exist or is not a directory.")
+                    except FileNotFoundError:
+                        # This can happen in rare cases with broken symbolic links
+                        context.logger.warn(f"{file_path.relative_to(root_path):<60} File not found or broken link.")
+        else:
+            context.logger.error(f"Error: The specified data_path '{data_path}' does not exist or is not a directory.")
+            # Solleva un'eccezione per far fallire l'inizializzazione se il percorso è critico
+            raise FileNotFoundError(f"Required directory not found: {data_path}")
+            
+    except Exception as e:
+        context.logger.error(f"An unexpected error occurred during file scanning: {str(e)}")
+        raise # Rilancia l'eccezione per vedere l'errore completo nei log
+
+    context.logger.info("--- End of content view ---")
     
-    print("--- End of content view ---\n")
+    # --- 3. Assicurati che qui ci sia il resto del tuo codice di inizializzazione ---
+    # Esempio:
+    # context.user_data.model = load_my_model()
+
+    context.logger.info("Context initialization complete.")
 
     model = project.get_model(model_name)
     path = model.download(destination=data_path + "/trained_model", overwrite=True)
