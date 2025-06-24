@@ -84,11 +84,6 @@ def init(context, model_name="early-exit-model", sp_model="bpe-256.model", sp_le
 
     context_dict['args'] = args
 
-    model = project.get_model(model_name)
-    path = model.download(destination=data_path + "/trained_model", overwrite=True)
-    model = load_model(path, args)
-    context_dict['model'] = model
-
     # View the content of the files in the data path
     print(f"\n--- Contents of {data_path} ---")
     from pathlib import Path
@@ -124,6 +119,13 @@ def init(context, model_name="early-exit-model", sp_model="bpe-256.model", sp_le
         print(f"Error: The specified data_path '{data_path}' does not exist or is not a directory.")
     
     print("--- End of content view ---\n")
+
+    model = project.get_model(model_name)
+    path = model.download(destination=data_path + "/trained_model", overwrite=True)
+    model = load_model(path, args)
+    context_dict['model'] = model
+
+    
     # load lexicon
     #lexicon_artifact = project.get_artifact(lexicon)    
     #lexicon_path = lexicon_artifact.download(destination=data_path + "/sentencepiece", overwrite=True)
