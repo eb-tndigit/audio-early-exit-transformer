@@ -247,10 +247,10 @@ def serve_multipart(context, event):
                 file_details.save_as(filename)
                 context.logger.info(f"filename:{filename}") 
 
-                trasncript = serve_local(context.context_dict, filename)  
+                transcript = serve_local(context.context_dict, filename)  
                 info = {}
                 info['filename'] = filed_name
-                info['trasncript'] = trasncript
+                info['transcript'] = transcript
                 results.append(info)
 
                 if os.path.exists(filename):
@@ -278,10 +278,10 @@ def simple_app(environ, start_response):
                 filename = data_path + "/upload/" + id_generator() + "_" + file_details.filename
                 file_details.save_as(context_dict, filename) 
 
-                trasncript = serve_local(filename)  
+                transcript = serve_local(filename)  
                 info = {}
                 info['filename'] = filename
-                info['trasncript'] = trasncript
+                info['transcript'] = transcript
                 results.append(info)
 
                 if os.path.exists(filename):
