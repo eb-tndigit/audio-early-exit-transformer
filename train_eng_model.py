@@ -27,6 +27,8 @@ if typing.TYPE_CHECKING:
 
 
 def download_and_extract(tgzurl, path, filename):
+    # TODO: da cambiare in modo da andare a prendere il file direttamente da 
+    # DHCORE o da uno storage interno per velocizzare il processo e il testing
     filepath = path + filename
     print(f'{datetime.now()} | Starting download of {tgzurl}')
     urlretrieve(tgzurl, filepath)
