@@ -477,6 +477,7 @@ def get_args(initial_args=None, sp_model=None, sp_lexicon=None, sp_tokens=None):
         #conf["sp"] = spm.SentencePieceProcessor(base_dir + 'sentencepiece/build/libri.bpe-256.model')
         print("\n"*2, f"SP MODEL PATH: {sp_model}","\n"*2)
         conf["sp"] = spm.SentencePieceProcessor(sp_model)
+        print("\n"*2, "SP MODEL PATH loaded correctly","\n"*2)
         conf["src_pad_idx"] = 0
         conf["trg_pad_idx"] = 126
         conf["trg_sos_idx"] = 1
