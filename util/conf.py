@@ -461,7 +461,9 @@ def get_args(initial_args=None, sp_model=None, sp_lexicon=None, sp_tokens=None):
         args = parser.parse_args(initial_args)
 
     conf = vars(args)
-
+    print("\n\nConfs are:")
+    print(f"{conf}\n\n")
+    
     conf["decoder_mode"] = args.decoder_mode.lower()
 
     conf["device"] = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -475,6 +477,7 @@ def get_args(initial_args=None, sp_model=None, sp_lexicon=None, sp_tokens=None):
 
     if args.bpe == True:
         #conf["sp"] = spm.SentencePieceProcessor(base_dir + 'sentencepiece/build/libri.bpe-256.model')
+        # Dove trovare il modello sopra?
         print("\n"*2, f"SP MODEL PATH: {sp_model}","\n"*2)
         conf["sp"] = spm.SentencePieceProcessor(sp_model)
         print("\n"*2, "SP MODEL PATH loaded correctly","\n"*2)

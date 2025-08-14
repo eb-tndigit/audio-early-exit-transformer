@@ -32,6 +32,7 @@ def download_and_extract(tgzurl, path, filename):
     urlretrieve(tgzurl, filepath)
     print(f'{datetime.now()} | File downloaded successfully:' + tgzurl)
 
+    print(f'{datetime.now()} | Extracting "' + filepath + '" ...')
     file = tarfile.open(filepath)
     file.extractall(path)
     file.close()
@@ -212,7 +213,7 @@ def dh_train(project, librispeech_train_dataset: str = "train-clean-100", num_ep
     print("Getting ARGs...")
     # initialize settings
     args = get_args([], base_dir)
-    print("This are the args from the function get_args:")
+    print("This are the args after the function get_args:")
     print(args, "\n")
     args.batch_size = 15
     args.n_workers = 3
