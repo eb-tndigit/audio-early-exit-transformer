@@ -19,6 +19,7 @@ from util.conf import get_args
 from util.model_utils import *
 from util.tokenizer import *
 from data import get_data_loader
+from datetime import datetime
 
 import typing
 if typing.TYPE_CHECKING:
@@ -27,9 +28,9 @@ if typing.TYPE_CHECKING:
 
 def download_and_extract(tgzurl, path, filename):
     filepath = path + filename
-    print('File download:' + tgzurl)
+    print(f'{datetime.now()} | Starting download of {tgzurl}')
     urlretrieve(tgzurl, filepath)
-    print('File downloaded successfully:' + tgzurl)
+    print(f'{datetime.now()} | File downloaded successfully:' + tgzurl)
 
     file = tarfile.open(filepath)
     file.extractall(path)
