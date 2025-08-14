@@ -211,7 +211,8 @@ def dh_train(project, librispeech_train_dataset: str = "train-clean-100", num_ep
     print("Getting ARGs...")
     # initialize settings
     args = get_args([], base_dir)
-    print(args)
+    print("This are the args from the function get_args:")
+    print(args, "\n")
     args.batch_size = 15
     args.n_workers = 3
     args.shuffle = False
