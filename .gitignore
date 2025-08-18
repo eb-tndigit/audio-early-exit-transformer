@@ -22,7 +22,10 @@ runs/
 # Visual Studio Code
 .vscode
 
+English-EE-conformer
 English-EE-conformer/*
 _*
 
 .ipynb_checkpoints/*
+*-checkpoint.py
+
