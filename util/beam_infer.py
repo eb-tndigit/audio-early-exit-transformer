@@ -209,7 +209,7 @@ class BeamInference(object):
         if PAD_token == None:
             PAD_token = self.args.trg_pad_idx
         if beam_size == None:
-            beam_size == self.args.beam_size
+            beam_size = self.args.beam_size
         if pen_alpha == None:
             pen_alpha = self.args.pen_alpha
             
