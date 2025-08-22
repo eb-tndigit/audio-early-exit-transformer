@@ -16,10 +16,12 @@ from util.tokenizer import *
 import digitalhub as dh
 import torch
 
-
 context_dict = {}
 
 data_path="/data"
+
+def id_generator(size=8, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
 
 def evaluate_batch_ctc(args, model, batch, valid_len, inf):
     encoder = model(batch[0].to(args.device), valid_len)
