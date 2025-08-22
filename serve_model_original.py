@@ -16,10 +16,12 @@ from util.tokenizer import *
 import digitalhub as dh
 import torch
 
-
 context_dict = {}
 
 data_path="/data"
+
+def id_generator(size=8, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
 
 def evaluate_batch_ctc(args, model, batch, valid_len, inf):
     encoder = model(batch[0].to(args.device), valid_len)
@@ -134,6 +136,11 @@ def init(context, model_name="early-exit-model", sp_model="bpe-256.model", sp_le
         raise # Rilancia l'eccezione per vedere l'errore completo nei log
 
     context.logger.info("--- End of content view ---")
+    
+    # --- 3. Assicurati che qui ci sia il resto del tuo codice di inizializzazione ---
+    # Esempio:
+    # context.user_data.model = load_my_model()
+
     context.logger.info("Context initialization complete.")
 
     model = project.get_model(model_name)
@@ -141,12 +148,12 @@ def init(context, model_name="early-exit-model", sp_model="bpe-256.model", sp_le
     model = load_model(path, args)
     context_dict['model'] = model
 
+    # Log context_dict
     context.logger.info(f"init:{len(context_dict)}")
-    context.logger.info("="*40)
-    context.logger.info(f":{context_dict}")
-    context.logger.info("="*40)
+    context.logger.info("="*40, "\n", "CONTEXT DICT", "="*40, context_dict)
     
     setattr(context, "context_dict", context_dict)
+
 
 def load_model(model_path, args):
     model = Early_conformer(src_pad_idx=args.src_pad_idx,

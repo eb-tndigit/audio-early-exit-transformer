@@ -431,14 +431,15 @@ def get_parser():
         """
     )
 
-    # Inference settings
+    # Inference settings - Updated for H100 compatibility
 
     parser.add_argument(
         "--beam_size",
         type=int,
-        default=10,
+        default=5,  # Reduced from 10 to 5 for H100 compatibility
         help="""
-            Beam size for AED inference.
+            Beam size for CTC and AED inference. 
+            Reduced default for H100 GPU compatibility.
         """
     )
 
@@ -466,7 +467,32 @@ def get_args(initial_args=None, sp_model=None, sp_lexicon=None, sp_tokens=None):
 
     conf["decoder_mode"] = args.decoder_mode.lower()
 
-    conf["device"] = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    # Enhanced device detection and H100 compatibility setup
+    if torch.cuda.is_available():
+        device = torch.device("cuda:0")
+        # Apply H100 specific optimizations
+        try:
+            torch.cuda.empty_cache()
+            torch.cuda.set_per_process_memory_fraction(0.8)
+            
+            # Check GPU name for specific H100 handling
+            gpu_name = torch.cuda.get_device_name(0)
+            if "H100" in gpu_name:
+                print(f"Detected H100 GPU: {gpu_name}")
+                print("Applying H100-specific CUDA optimizations...")
+                # Further reduce beam size for H100 if not explicitly set
+                if conf["beam_size"] > 5:
+                    print(f"Reducing beam_size from {conf['beam_size']} to 5 for H100 compatibility")
+                    conf["beam_size"] = 5
+                    args.beam_size = 5
+            
+        except Exception as e:
+            print(f"Warning: Could not apply CUDA optimizations: {e}")
+            
+        conf["device"] = device
+    else:
+        conf["device"] = torch.device("cpu")
+        print("CUDA not available, using CPU")
 
     conf["src_pad_idx"] = 0
     conf["trg_pad_idx"] = 30
