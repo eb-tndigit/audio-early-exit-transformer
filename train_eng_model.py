@@ -254,7 +254,7 @@ def dh_train(project, librispeech_train_dataset: str = "train-clean-100", num_ep
         kind="model",
         source=model_path,
         algorithm="early-exit",
-        framework="pythorch"
+        framework="pytorch"
     )
     print(f"Model {model_name} saved!")
 
